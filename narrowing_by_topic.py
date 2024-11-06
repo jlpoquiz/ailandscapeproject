@@ -271,7 +271,7 @@ for topic in [0]:
                     temperature=0,
                     seed=2345,
                     messages=[
-                        {"role": "system", "content": prompt},
+                        {"role": "system", "content": prompt1},
                         {"role": "user", "content": examples_dict['example1']},
                         {"role": "assistant", "content": examples_dict['output1']},
                         {"role": "user", "content": examples_dict['example2']},

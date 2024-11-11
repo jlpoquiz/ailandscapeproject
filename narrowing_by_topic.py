@@ -34,7 +34,8 @@ papers_topics
 # PROMPT
 
 prompt1 = "You are an academic expert in economics, finance, management and innovation studies. You are provided with abstracts from academic papers. Your goal is to carefully review each abstract to identify the primary focus and methodology of the paper. Based on this analysis, classify each paper into one of the following categories. \n\nCategory A: The paper studies: \n- The impact of AI on economic (including but not limited to employment, growth, currency, productivity, competition, economic welfare) or management/innovation (such as corporate governance, business practices, innovation and employee retention) outcomes. Note that these outcomes do not have to be macroeconomic, e.g., the paper can focus on a specific firm's productivity or financial decisions. \n- The measurement of the economic impact of AI, including measurement challenges. \n- AI’s implications for ethics, the environment, or policy; provided they focus on how these issues relate to economic activity, e.g., the relationship between AI, racial inequality and income inequality. \n- The adoption of AI by firms, the government, or sectors; what affects adoption decisions; and how AI is used. \n- Economic drivers of AI progress, such as cost of compute. \nProvided they meet the earlier requirements, include both theoretical and empirical, micro and macro studies from the fields of economics, management, finance, and innovation (including sector-specific studies). \n\nCategory B: The paper does not fit into category A. This includes papers that develop or apply a machine learning technique, or measure to study an outcome other than the impact of AI, and papers that develop an AI tool. This includes papers that focus on developing machine learning techniques to predict financial returns. It also includes papers that focus on social outcomes such as race, religion and politics where the paper does not make explicit links to economic outcomes, such as economic inequality, unemployment or resource distribution. Include in this category papers that are not about AI. \n\nInstructions: 1. Reason first, and summarise in no more than three bullet points, the main focus and methodology of the paper outlined in the abstract. 2. Only when you have enough information, decide on a classification based on 1. Do not use more than 100 words in your response. When giving your final classification, format it as 'Class: x' where x is your suggested classification. For each abstract you correctly classify, I will pay you $10 as a tip."
-prompt2 = "You are an academic expert in economics, finance, management and innovation studies. You are provided with abstracts from academic papers. Your goal is to carefully review each abstract to identify the primary focus and methodology of the paper. Based on this analysis, classify each paper as either A, investigating the impact of AI itself on some economic outcome, or B, using artificial intelligence methods to answer some research question. Instructions: 1. Reason first, and summarise in no more than three bullet points, the main focus and methodology of the paper outlined in the abstract. 2. Only when you have enough information, decide on a classification based on 1. Do not use more than 100 words in your response. When giving your final classification, format it as 'Class: x' where x is your suggested classification. For each abstract you correctly classify, I will pay you $10 as a tip."
+prompt2 = "You are an academic expert in economics, finance, management and innovation studies. You are provided with abstracts from academic papers. Your goal is to carefully review each abstract to identify the primary focus and methodology of the paper. Based on this analysis, classify each paper as either A, measuring or analyzing the impact of AI itself on some outcome, or B, using AI methods to answer a question or solve a problem. Include systematic reviews on the impact of AI in A. Also include in A papers that use AI to analyze the impact of AI. Also include in A papers that study the drivers of AI adoption. Instructions: 1. Reason first, and summarise in no more than three sentences, the main focus and methodology of the paper outlined in the abstract. 2. State explicitly whether the paper analyzes AI impacts/adoption or uses AI. 3. Only when you have enough information, classify based on 2. Do not use more than 100 words in your response. When giving your final classification, format it as 'Class: x' where x is your suggested classification. For each abstract you correctly classify, I will pay you $1 million as a tip."
+prompt3 = "You are an academic expert in economics, finance, management and innovation studies. You are provided with abstracts from academic papers. Your goal is to carefully review each abstract to identify the primary focus and methodology of the paper. Based on this analysis, classify each paper as either A, analyzing the impacts of AI on fairness, decision-making or ethical outcomes within an economic context; or B, not. Include in B papers that propose a method or technique for mitigating these impacts, rather than analyzing them. Instructions: 1. Reason first, and summarise in no more than three bullet points, the main focus and methodology of the paper outlined in the abstract. 2. Only when you have enough information, decide on a classification based on 1. Do not use more than 100 words in your response. When giving your final classification, format it as 'Class: x' where x is your suggested classification. For each abstract you correctly classify, I will pay you $10 as a tip."
 
 print(prompt2)
 
@@ -42,8 +43,21 @@ print(prompt2)
 # EXAMPLES
 
 def get_examples(topic):
-    # if topic == -1: # uncategorised
+    if topic == -1: # uncategorised
+        examples_outputs = {
+            "example1": """Using the BERT large language model and extensive textual data, this paper measures the alignment between firm achievements and government development goals. We prove that firms aligning closely with national goals are more favorably valued in the capital market. Our results offer valuable insights for policymakers and corporate leaders in strategy optimization within complex macroeconomic environments.""",
+            "output1": """This paper uses the BERT model to measure the alignment between firm achievements and government development goals. It finds that alignment positively affects capital market valuation. Since the study uses an AI model (BERT) to measure the economic impact of alignment with development goals, not AI itself, it is in category B. Class: B""",
+        
+            "example2": """Background and Purpose: The process of business to business (B2B) sales forecasting is a complex decision-making process. There are many approaches to support this process, but mainly it is still based on the subjective judgment of a decision-maker. The problem of B2B sales forecasting can be modeled as a classification problem. However, top performing machine learning (ML) models are black boxes and do not support transparent reasoning. The purpose of this research is to develop an organizational model using ML model coupled with general explanation methods. The goal is to support the decision-maker in the process of B2B sales forecasting. Design/Methodology/Approach: Participatory approach of action design research was used to promote acceptance of the model among users. ML model was built following CRISP-DM methodology and utilizes R software environment. Results: ML model was developed in several design cycles involving users. It was evaluated in the company for several months. Results suggest that based on the explanations of the ML model predictions the users' forecasts improved. Furthermore, when the users embrace the proposed ML model and its explanations, they change their initial beliefs, make more accurate B2B sales predictions and detect other features of the process, not included in the ML model. Conclusions: The proposed model promotes understanding, foster debate and validation of existing beliefs, and thus contributes to single and double-loop learning. Active participation of the users in the process of development, validation, and implementation has shown to be beneficial in creating trust and promotes acceptance in practice.""",
+            "output2": """This paper develops a machine learning model to improve B2B sales forecasting, with an emphasis on explainability. As the focus of the paper is on developing a model, rather than analysing the economic impacts of AI, it is in category B. Class: B""",
 
+            "example3": """Purpose: The paper faces artificial intelligence issues in the venture creation process, exploring how artificial intelligence solutions intervene and forge the venture creation process. Drawing on the most recent literature on artificial intelligence and entrepreneurship, the authors propose a set of theoretical propositions. Design/methodology/approach: The authors adopt a multiple case approach to assess propositions and analyse 4 case studies from which the authors provide (1) more detailed observation about entrepreneurial process phases influenced by artificial intelligence solutions and (2) more details about mechanics enabled by artificial intelligence. Findings: The analysis demonstrates artificial intelligence contributes alongside the entrepreneurial process, enabling mechanisms that reduce costs or resources, generate new organizational processes but simultaneously expand the network needed for venture creation. Originality/value: The paper adopts a deductive approach analyzing the contribution of AI-based startup offerings in changing the entrepreneurial process. Thus, the paper provides a practical view of the potentiality of artificial intelligence in enabling entrepreneurial processes through the analysis of compelling propositions and the technological ability of artificial intelligence solutions.""",
+            "output3": """This paper explores the role of AI in the venture creation process, using a multiple case study approach to analyze how AI influences entrepreneurial phases and mechanisms. It focuses on the impact of AI on organizational processes and cost reduction in entrepreneurship, which qualifies it for category A. Class: A""",
+
+            "example4": """The deep integration of artificial intelligence (AI) into enterprises presents both opportunities and challenges, making it a focal point of current research. This study explores the impact of AI on corporate risk-taking, using data spanning 2010‚Äì2019 from A-share listed companies in China. Our findings suggest that AI significantly heightens companies‚Äô level of risk-taking. Furthermore, financing constraints can amplify the relationship between AI and risk-taking, enhancing their sensitivity correlation. AI also significantly improves firms‚Äô investment efficiency and mitigates their underinvestment issues. Finally, mediation tests indicate that AI enhances risk-taking by diminishing firms‚Äô risk perception. Overall, we offer valuable insights into and references for accelerating the deep integration of AI into enterprises.""",
+            "output4": """This paper investigates the impact of AI on corporate risk-taking using data from Chinese companies. Since it is focusedf on the economic implications of AI adoption, it is in category A. Class: A"""
+        }
+        return examples_outputs
     if topic == 0: # supply chains
         examples_outputs = {
             "example1": """Production rates are considered as an essential aspect of construction industry because they are the indicators of the productivity efficiency of construction sector. However, there is a gap in identifying factors affecting rebar workers and their production rate. This study tries to bridge this gap by developing a neural network model for estimating rebar labourâ€™s production rates. A questionnaire has been distributed and statistical software program was used to analyze the collected data. Two methods were used for analysis. The first depends on relative importance index, whereas the second depends on the probability and the impact. The results indicate that â€˜project typeâ€™ is the most important factor affecting the productivity. A model was estimated to predict rebar laboursâ€™ productivity. Reliable values have been successfully predicted by artificial neural network. This article presents a software program, which is used to measure the production rate (Output) based on the data provided in the form of factors affecting the rebar labour (Input). This helps to measure productivity growth in a low-cost residential building. In addition, it supports fundamentals building by predicting the production rate of rebar labour, to establish a database for executed projects in the future to develop productivity estimation process.""",
@@ -152,16 +166,16 @@ def get_examples(topic):
     elif topic == 14: # agriculture
         examples_outputs = {
             "example1": """This work presents and implements a low-cost irrigation system for smart agriculture that is based on the Internet of Things (IoT). In order to continuously monitor environmental data in real time, the system is equipped with a network of sensors, including pressure, temperature, moisture, and water level sensors. In order to anticipate when irrigation pumps will switch on, machine learning techniques including Artificial Neural Networks (ANN), Decision Trees (DT), Naive Bayes (NB), and Support Vector Machines (SVM) are linked depending on established parameters. The study shows that the ANN model can identify complicated patterns in the agricultural environment with an accuracy of up to 98.33%. Farmers are able to make well-informed decisions quickly thanks to the cloud connectivity and intuitive interface of remote monitoring and control. Because predictive modeling minimizes pump activation delays, it lessens the chance of both over- and under-irrigation. The suggested strategy makes the most use of available water and provides opportunities for precision farming, which is a major step forward for sustainable agriculture. The study's findings demonstrate how well the system uses resources and open the door for the future creation of innovative, scalable agricultural technology.""",
-            "output1": """This paper develops a low-cost irrigation system for smart agriculture, using IoT and machine learning as tools to examine and improve irrigation practices. Since AI is not the central focus but rather a means to achieve operational improvements, it fits into Class B.""",
+            "output1": """This paper develops a low-cost irrigation system for smart agriculture, using IoT and machine learning as tools to examine and improve irrigation practices. It does not study but uses AI. Hence, it fits into Class B.""",
 
             "example2": """The agri-food sector contributes significantly to economic and social advancements globally despite numerous challenges such as food safety and security, demand and supply gaps, product quality, traceability, etc. Digital technologies offer effective and sustainable ways to these challenges through reduced human interference and improved data-accuracy. Innovations led by digital transformations in the agri-food supply chains (AFSCs) are the main aim of 'Agri-Food 4.0'. This brings significant transformations in the agri-food sector by reducing food wastage, real-time product monitoring, reducing scalability issues, etc. This paper presents a systematic review of the innovations in the agri-food for digital technologies such as internet-of-things, artificial intelligence, big data, RFID, robotics, block-chain technology, etc. The employment of these technologies from the 'farm to fork' along AFSC emphasizes a review of 159 articles solicited from different sources. This paper also highlights digitization in developing smart, sensible, and sustainable agri-food supply chain systems.""",
-            "output2": """This paper systematically reviews the innovations in the agri-food sector driven by digital technologies, including AI. It discusses the implications of these technologies for improving supply chains and addressing challenges like food safety and waste. The focus on economic and management outcomes qualifies it for category A. Class: A""",
+            "output2": """This paper systematically reviews the innovations in the agri-food sector driven by digital technologies, including AI. It discusses the implications of AI for improving supply chains and addressing challenges like food safety and waste. It studies the impact of AI. This qualifies it for category A. Class: A""",
 
             "example3": """As population aging becomes the new demographic norm in China, its workforce structure is changing, and its demographic dividend is about to disappear. Artificial intelligence (AI) has been experiencing rapid progress in the last few years, and it is becoming an important tool to address the impact and challenges of an aging population. Therefore, this research introduces population aging and artificial intelligence into agricultural production, focusing on the effects of population aging on food security and the function played by artificial intelligence in it. From an empirical study conducted based on provincial panel data, the following conclusions arise. First, population aging in rural China has not negatively impacted food security, so there is no need to be overly pessimistic about the inevitable aging of the rural population. Second, AI has a favorable moderating function on the effects of population aging on food security. Third, the moderating effect of AI is heterogeneous. Compared with other provinces, AI can play a strongly positive moderating effect in central and west regions and major grain-selling areas. Based on the above findings, this paper proposes targeted policy recommendations on protecting food security in the context of artificial intelligence and population aging.""",
-            "output3": """This paper examines the relationship between population aging, AI, and food security in rural China. It uses empirical data to analyze how AI moderates the effects of aging on food security. The focus on AI's role in addressing economic challenges qualifies it for category A. Class: A""",
+            "output3": """This paper examines the relationship between population aging, AI, and food security in rural China. It uses empirical data to analyze how AI moderates the effects of aging on food security. It studies the impact of AI. This qualifies it for category A. Class: A""",
 
             "example4": """The problem of multiple zones in computer vision, including pattern recognition in the agricultural sector, occupies a special place in the field of artificial intelligence in the modern aspect. The object of the study is the recognition of weeds based on deep learning and computer vision. The subject of the study is the effective use of neural network models in training, involving classification and processing using datasets of plants and weeds. The relevance of the study lies in the demand of the modern world in the use of new information technologies in industrial agriculture, which contributes to improving the efficiency of agro-industrial complexes. The interest of private agricultural enterprises and the state is caused by an increase in the yield of agricultural products. To recognize weeds, machine learning methods, in particular neural networks, were used. The process of weed recognition is described using the Mark model, as a result of processing 1,562 pictures, segmented images are obtained. Due to the annual increase in weeds on the territory of Kazakhstan and in the course of solving these problems, a new plant recognition code was developed and written in the scanner software module. The scanner, in turn, provides automatic detection of weeds. Based on the results of a trained neural network based on the MaskRCNN neural network model written in the scanner software module meeting new time standards, the automated plant scanning and recognition system was improved. The weed was recognized in an average of 0.2 seconds with an accuracy of 89 %, while the additional human factor was completely removed. The use of new technology helps to control weeds and contributes to solving the problem of controlling them.""",
-            "output4": """This study focuses on using deep learning and computer vision for weed recognition in agriculture. The study uses AI and machine learning solely as methods to improve weed recognition, not focusing on the broader economic implications of AI. Thus, it correctly falls into Class B. Class: B"""
+            "output4": """This study focuses on using deep learning and computer vision for weed recognition in agriculture. The study uses AI and machine learning solely as methods to improve weed recognition, not focusing on the broader economic implications of AI. It does not study but uses AI. Thus, it correctly falls into Class B. Class: B"""
         }
         return examples_outputs
     elif topic == 16: # decision-making, fairness and ethics
@@ -214,9 +228,9 @@ def get_examples(topic):
 # %%
 ## PROMPT GPT-4
 
-topic_list = [0,2,3,610,11,12,14,16,18,20]
+topic_list = [-1,0,2,3,610,11,12,14,16,18,20]
 
-for topic in [0]:
+for topic in [14]:
     # set up logging
     logging.basicConfig(level = logging.INFO)
 
@@ -265,24 +279,63 @@ for topic in [0]:
                 data_dict['reason_stop'].append('')
                 data_dict['system_fingerprint'].append('')
             else:
-                response = client.chat.completions.create(
-                    model="gpt-4o-mini",
-                    max_tokens=300,
-                    temperature=0,
-                    seed=2345,
-                    messages=[
-                        {"role": "system", "content": prompt1},
-                        {"role": "user", "content": examples_dict['example1']},
-                        {"role": "assistant", "content": examples_dict['output1']},
-                        {"role": "user", "content": examples_dict['example2']},
-                        {"role": "assistant", "content": examples_dict['output2']},
-                        {"role": "user", "content": examples_dict['example3']}, 
-                        {"role": "assistant", "content": examples_dict['output3']},
-                        {"role": "user", "content": examples_dict['example4']},
-                        {"role": "assistant", "content": examples_dict['output4']},
-                        {"role": "user", "content": row['Abstract']}
-                    ]
-                )
+                if topic == 16: # special prompt for ethics
+                    response = client.chat.completions.create(
+                        model="gpt-4o-mini",
+                        max_tokens=300,
+                        temperature=0,
+                        seed=2345,
+                        messages=[
+                            {"role": "system", "content": prompt3},
+                            {"role": "user", "content": examples_dict['example1']},
+                            {"role": "assistant", "content": examples_dict['output1']},
+                            {"role": "user", "content": examples_dict['example2']},
+                            {"role": "assistant", "content": examples_dict['output2']},
+                            {"role": "user", "content": examples_dict['example3']}, 
+                            {"role": "assistant", "content": examples_dict['output3']},
+                            {"role": "user", "content": examples_dict['example4']},
+                            {"role": "assistant", "content": examples_dict['output4']},
+                            {"role": "user", "content": row['Abstract']}
+                        ]
+                    )
+                if topic == 14: # use gpt4 for agriculture since this is hard
+                    response = client.chat.completions.create(
+                        model="gpt-4o",
+                        max_tokens=300,
+                        temperature=0,
+                        seed=2345,
+                        messages=[
+                            {"role": "system", "content": prompt2},
+                            {"role": "user", "content": examples_dict['example1']},
+                            {"role": "assistant", "content": examples_dict['output1']},
+                            {"role": "user", "content": examples_dict['example2']},
+                            {"role": "assistant", "content": examples_dict['output2']},
+                            {"role": "user", "content": examples_dict['example3']}, 
+                            {"role": "assistant", "content": examples_dict['output3']},
+                            {"role": "user", "content": examples_dict['example4']},
+                            {"role": "assistant", "content": examples_dict['output4']},
+                            {"role": "user", "content": row['Abstract']}
+                        ]
+                    )
+                else: # normal prompt
+                    response = client.chat.completions.create(
+                        model="gpt-4o-mini",
+                        max_tokens=300,
+                        temperature=0,
+                        seed=2345,
+                        messages=[
+                            {"role": "system", "content": prompt2},
+                            {"role": "user", "content": examples_dict['example1']},
+                            {"role": "assistant", "content": examples_dict['output1']},
+                            {"role": "user", "content": examples_dict['example2']},
+                            {"role": "assistant", "content": examples_dict['output2']},
+                            {"role": "user", "content": examples_dict['example3']}, 
+                            {"role": "assistant", "content": examples_dict['output3']},
+                            {"role": "user", "content": examples_dict['example4']},
+                            {"role": "assistant", "content": examples_dict['output4']},
+                            {"role": "user", "content": row['Abstract']}
+                        ]
+                    )
             
                 # store data in df
                 data_dict['Abstract'].append(row['Abstract'])

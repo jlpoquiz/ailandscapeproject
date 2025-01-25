@@ -14,8 +14,9 @@ if username =="lucyjhampton":
     local_path = r"/Users/lucyjhampton/Library/CloudStorage/GoogleDrive-lucyjhampton5@gmail.com/My Drive/AI Landscape Collaboration"
     os.chdir(local_path)
 if username == "lhampton":
-    local_path = r"/Users/lhampton/Library/CloudStorage/GoogleDrive-lucyjhampton5@gmail.com/My Drive/AI Landscape Collaboration"
+    local_path = r"/Users/lhampton/Documents/Local_Projects/ailandscapeproject"
     os.chdir(local_path)
+    data_path = r"/Users/lhampton/Library/CloudStorage/GoogleDrive-lucyjhampton5@gmail.com/.shortcut-targets-by-id/1EznD-uaTblXtaIVx04-toZMQh7cQf9hA/AI Landscape Large Files/Data/constructed"
 
 # %%
 
@@ -446,26 +447,174 @@ for_lucy_A_2.to_csv('for_lucy_A_2.csv')
 for_lucy_B_2.to_csv('for_lucy_B_2.csv')
 
 # %%
-import tiktoken
-# define token count function
-def num_tokens_from_string(string: str, encoding_name: str) -> int:
-    """Returns the number of tokens in a text string."""
-    encoding = tiktoken.encoding_for_model(encoding_name)
-    num_tokens = len(encoding.encode(string))
-    return num_tokens
+## SECOND ROUND OF NARROWING
 
-# apply to papers
-As['no_tokens'] = As['abstract'].apply(lambda x: num_tokens_from_string(str(x), "gpt-4o"))
+classed_wps_2 = pd.read_csv(f"{data_path}/wp_classification/classed_wps_2.csv", index_col=0)
+classed_wps_2_As = classed_wps_2[classed_wps_2['GPT_class'] == "A"]
+classed_wps_2_As
 
-## estimate cost
-Total = As['no_tokens'].sum()*0.12
-print(f"Number of paper tokens: {Total}")
-examples = ''.join([globals()[f'example{i}'] for i in range(1, 15)])
-outputs = ''.join([globals()[f'output{i}'] for i in range(1, 15)])
-prompt_tokens = num_tokens_from_string(prompt2, "gpt-4o") + num_tokens_from_string(examples, "gpt-4o") + num_tokens_from_string(examples, "gpt-4o")
-prompt_tokens = prompt_tokens/5
-print(f"Number of prompt tokens: {prompt_tokens}")
-est_output_tokens = 250
-cost = (1.25*prompt_tokens*6000/10**6) + (2.5*Total/10**6) + (10*est_output_tokens*6000/10**6)
-print(f"Estimated total cost in $: {cost}")
+# %%
+prompt3 = """You are an academic expert in economics, finance, management and innovation studies. You are provided with abstracts from academic papers. Your goal is to carefully review each abstract to identify the primary focus and methodology of the paper. Based on this analysis, classify each paper as either A, measuring or analyzing the impact of AI itself on some outcome; or B, proposing an AI technique to answer a question/solve a problem. Include systematic reviews on the impact of AI in A. Also include in A papers that use AI to analyze the impact of AI. Also include in A papers that study the drivers of AI adoption. Also place in AI papers that study the ethical or policy implications of AI, provided the paper FOCUSES on how these issues affect or are caused by economic outcomes. Place studies that investigate the impact of some technology other than AI (such as IoT) in B. Place studies that propose an ML method to improve performance in a particular application in B, even if the method would have economic implications, unless the FOCUS of the paper is explicitly on downstream economic outcomes like productivity, costs, revenue or profits. 
+
+Instructions: 
+1. Reason first, and summarise in no more than two sentences, the main focus and methodology of the paper outlined in the abstract. 
+2. State explicitly whether the paper analyzes AI impacts/AI adoption, or uses AI as a methodology. 
+3. Only when you have enough information, classify based on 2.
+
+Do not use more than 100 words in your response. When giving your final classification, format it as 'Class: x' where x is your suggested classification. For each abstract you correctly classify, I will pay you $1 million as a tip."""
+
+# %%
+example1 = """The purpose of this chapter consists in analyzing the impact of end-to-end technologies (primarily, artificial intelligence) on economic development: Technological changes do not always lead to the desired results and, on the contrary, can cause economic and moral damage in some cases. A human who, by nature, always wants to work less and relax more finally gets this opportunity, but, for some reason, remains dissatisfied with the fact that the robots have taken their jobs away after all. The methodological and theoretical framework of the research is the tasks set by prominent contemporary economists: Zeira, Aghion, and Acemoglu, who consider artificial intelligence as one of the main factors of economic growth in the digital age. The authors of this chapter conclude that AI is more than just a factor in economic growth. It plays a dual role in socioeconomic development: as a stimulus for the growth of human employment, labor productivity, and, as a result, a reduction in employment. Both aspects are very important in the formation and adjustment of the policy to ensure the social security of any country at the present stage."""
+output1 = """The paper analyzes the impact of technologies including AI on economic development using the theoretical framework of Zeira, Aghion, and Acemoglu. The paper studies the impact of AI. Class: A"""
+
+example2 = """We study fraud in the unemployment insurance (UI) system using a dataset of 35 million debit card transactions. We apply machine learning techniques to cluster cards corresponding to varying levels of suspicious or potentially fraudulent activity. We then conduct a difference-in-differences analysis based on the staggered adoption of state-level identity verification systems between 2020 and 2021 to assess the effectiveness of screening for reducing fraud. Our findings suggest that identity verification reduced payouts to suspicious cards by 27%, while non-suspicious cards were largely unaffected by these technologies. Our results indicate that identity screening may be an effective mechanism for mitigating fraud in the UI system and for benefits programs more broadly."""
+output2 = """The paper studies fraud in the unemployment insurance system using machine learning techniques to cluster cards and a difference-in-differences analysis to assess the effectiveness of identity verification systems. The paper does not study the impact of AI, it just uses AI as a technique. Class: B"""
+
+example3 = """We develop a deep learning model to detect emotions embedded in press conferences after the meetings of the Federal Open Market Committee and examine the influence of the detected emotions on financial markets. We find that, after controlling for the Fed‚Äôs actions and the sentiment in policy texts, positive tone in the voices of Fed Chairs leads to statistically significant and economically large increases in share prices. In other words, how policy messages are communicated can move the stock market. In contrast, the bond market appears to take few vocal cues from the Chairs. Our results provide implications for improving the effectiveness of central bank communications."""
+output3 = """The paper develops a deep learning model to detect emotions in press conferences and examines the influence of these emotions on financial markets. The paper does not stufy the impact of AI, it just uses it to analyze another question (impact of emotion on stock markets). Class: B"""
+
+example4 = """Growing AI readership, proxied by expected machine downloads, motivates firms to prepare filings that are friendlier to machine parsing and processing. Firms avoid words that are perceived as negative by computational algorithms, as compared to those deemed negative only by dictionaries meant for human readers. The publication of Loughran and McDonald (2011) serves as an instrumental event attributing the difference-in-differences in the measured sentiment to machine readership. High machine-readership firms also exhibit speech emotion assessed as embodying more positivity and excitement by audio processors. This is the first study exploring the feedback effect on corporate disclosure in response to technology."""
+output4 = """The paper studies how firms prepare filings to be more machine-friendly due to growing AI readership. The paper studies the impact of AI (on corporate disclosure). Class: A"""
+
+example5 = """Machine learning (ML) affects nearly every aspect of our lives, including the weightiest ones such as criminal justice. As it becomes more widespread, however, it raises the question of how we can integrate fairness into ML algorithms to ensure that all citizens receive equal treatment and to avoid imperiling society‚Äôs democratic values. In this paper we study various formal definitions of fairness that can be embedded into ML algorithms and show that the root cause of most debates about AI fairness is society‚Äôs lack of a consistent understanding of fairness generally. We conclude that AI regulations stipulating an abstract fairness principle are ineffective societally.Capitalizing on extensive related work in computer science and the humanities, we present an approach that can help ML developers choose a formal definition of fairness suitable for a particular country and application domain. Abstract rules from the human world fail in the ML world and ML developers will never be free from criticism if the status quo remains. We argue that the law should shift from an abstract definition of fairness to a formal legal definition. Legislators and society as a whole should tackle the challenge of defining fairness, but since no definition perfectly matches the human sense of fairness, legislators must publicly acknowledge the drawbacks of the chosen definition and assert that the benefits outweigh them. Doing so creates transparent standards of fairness to ensure that technology serves the values and best interests of society."""
+output5 = """The paper studies how to integrate fairness into ML algorithms to ensure equal treatment and avoid imperiling democratic values. The paper does not study the impact of AI in an economic context. Class: B"""
+
+example6 = """With the adoption of the AI Act, the EU has substantially enhanced the rules governing the training of generative AI systems and, more specifically, the interface with copyright protection. The AI Act clarifies that, from an EU perspective, reproductions carried out for AI training purposes have copyright relevance and require the authorization of rightholders unless a copyright exception, such as the specific text and data mining (‚ÄúTDM‚Äù) rule for scientific research in Article 3 of the 2019 Directive on Copyright in the Digital Single Market (‚ÄúCDSMD‚Äù), exempts the AI training activity from the control of rightholders. The AI Act also confirms the rights reservation system following from Article 4(3) CDSMD with regard to forms of TDM falling outside the scope of the scientific TDM exemption and going beyond mere temporary copying: declaring an ‚Äúopt-out‚Äù in an appropriate ‚Äì machine-readable ‚Äì manner, copyright owners seeking to prevent the use of their works for AI training purposes can reserve their rights. Remarkably, the AI Act seeks to universalize this approach and achieve a ‚ÄúBrussels effect.‚Äù  Regardless of whether the training has taken place in the EU or elsewhere, it imposes a market ban on AI systems that have not been trained in accordance with EU requirements, including the obligation to observe opt-outs declared under Article 4(3) CDSMD. To enable rightholders to police AI training processes, the AI Act introduces a new transparency obligation. Developers of generative AI systems must submit sufficiently detailed information on work repertoires that have been used for training purposes. Before embarking on a discussion of these new rules, the analysis sheds light on the policy objective underlying this copyright package in the AI Act: the intention to ensure that authors are properly remunerated for the use of their works in AI training processes. It then discusses the extension of EU opt-outs to other regions and the training data transparency which the EU legislator deems necessary to enforce copyright in AI training contexts. Finally, the potential benefits to authors will be weighed against the regulatory burdens the AI Act imposes on AI trainers. As a final step, the analysis explores alternative solutions. While the AI Act focuses on the input dimension (the use of human works for AI training), it is conceivable to take the output dimension (the offer and commercialization of fully trained AI systems) as a reference point for remuneration systems. Following this alternative avenue, the remuneration obligation concerns the final stage when generative AI products and services are brought to the market. In contrast to the strategy underlying the AI Act, this alternative approach refrains from encumbering the AI training process with obligations to observe opt-outs, establish lists of training resources and pay remuneration. Before following in the footsteps of the AI Act, law and policymakers in other regions should evaluate the advantages of this alternative policy avenue."""
+output6 = """The paper studies the EU's AI Act and its implications for copyright protection in the context of AI training. While the paper makes reference to balancing copyright concerns with training costs, this is not the focus on the paper. Class: B"""
+
+example7 = """I examine racial bias in the most popular home valuation algorithm and study the algorithm‚Äôs impact on racial bias in transaction prices. I find statistically significant but economically small racial bias in the algorithm. For example, while Black buyers overpay by 9.3% in prices relative to White buyers for similar homes, the algorithm only overvalues the same transactions by 1.1%. The algorithm inadvertently learns racial bias from patterns in historical transaction prices. The algorithmic racial bias is small because the algorithm is designed to be insensitive to transitory pricing factors related to behavioral biases, sellers‚Äô liquidity conditions, and buyer or seller race. Exploiting the staggered rollout of the algorithm in a neighboring ZIP Code setting, I find that if the algorithmic valuation is available for all the homes in an area, it reduces the overpayment of Black buyers relative to White buyers by 4.8%. The results suggest that the application of slightly biased machine learning algorithms can mitigate social bias if they are less biased than humans."""
+output7 = """The paper studies racial bias in a home valuation algorithm and its impact on transaction prices. The paper studies the impact of AI algorithms on discrimination and focuses on an economic context (house transaction prices). Class: A"""
+
+example8 = """We consider competition between firms that design and use algorithms to target consumers. Firms first choose the design of a supervised learning algorithm in terms of the complexity of the model or the number of variables to accommodate. Each firm then appoints a data analyst to estimate demand for multiple consumer segments by running the chosen design of the algorithm. Based on the estimates, each firm devises a targeting policy to maximize estimated profit. The firms face the general trade-off between bias and variance in model selection. We show that competition may induce firms to choose algorithms with more bias leading to simpler (less flexible) algorithmic choice. This implies that complex (more flexible) algorithms such as deep learning that show greater variance in the estimates are more valuable to firms with greater monopoly power."""
+output8 = """The paper studies competition between firms that design and use algorithms to target consumers. The paper studies how competition influences algorithmic choice (i.e. AI adoption). Class: A"""
+
+example9= """This paper presents the work carried out in the Research and Development Unit of the Banco de Espa√±a‚Äôs Banknote Production Control Department over the last few months in the field of artificial intelligence (AI). Research and development have focused on the application of AI to the banknote production process, specifically to banknote quality control. The most important terms related to artificial intelligence and quality management in the world of banknotes are explained. The paper concludes by outlining a prototype of a dual quality control system."""
+output9 = """The paper studies the application of AI to the banknote production process, specifically to banknote quality control. It discusess how AI is used for a specific application without focusing on the impact on downstream economic outcomes. Class: B"""
+# %%
+#%%
+## PROMPT GPT-4 mini to narrow further
+
+data_path = '/Users/lhampton/Library/CloudStorage/GoogleDrive-lucyjhampton5@gmail.com/.shortcut-targets-by-id/1EznD-uaTblXtaIVx04-toZMQh7cQf9hA/AI Landscape Large Files/Data/constructed/wp_classification'
+
+# set up logging
+logging.basicConfig(level = logging.INFO)
+
+# Load progress from the last run (if any)
+try:
+    classed_wps_3 = pd.read_csv(f"{data_path}/classed_wps_3.csv")
+    processed_IDs_3 = set(classed_wps_3['ID'])
+    data_dict_3 = classed_wps_3.to_dict('list')
+except FileNotFoundError:
+    classed_wps_3 = pd.DataFrame(columns=['abstract', 'ID', 'doi', 'GPT_response', 'GPT_class', 'Input_tokens', 'Output_tokens', 'reason_stop', 'system_fingerprint'])
+    processed_IDs_3 = set()
+    data_dict_3 = {
+        'abstract': [],
+        'ID': [],
+        'doi': [],
+        'GPT_response': [],
+        'GPT_class': [],
+        'Input_tokens': [],
+        'Output_tokens': [],
+        'reason_stop': [],
+        'system_fingerprint': []
+    }
+
+# set up api
+if username == "lhampton":
+    env_location = '/Users/lhampton/Documents/env files/AI Landscape/.env'
+else:
+    env_location = '/Users/lucyjhampton/Documents/env files/AI Landscape/.env'
+load_dotenv(env_location)
+api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI()
+client.api_key = api_key
+
+# loop through abstracts
+for index, row in tqdm(classed_wps_2_As.reset_index().iterrows(), desc = 'Processing abstracts'):
+    if row['ID'] in processed_IDs_3:
+        continue
+        
+    else:
+        if pd.isnull(row['abstract']):
+            data_dict_3['abstract'].append(row['abstract'])
+            data_dict_3['ID'].append(row['ID'])
+            data_dict_3['doi'].append(row['doi'])
+            data_dict_3['GPT_response'].append('')
+            data_dict_3['GPT_class'].append('')
+            data_dict_3['Input_tokens'].append('')
+            data_dict_3['Output_tokens'].append('')
+            data_dict_3['reason_stop'].append('')
+            data_dict_3['system_fingerprint'].append('')
+        else:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                max_tokens=300,
+                temperature=0,
+                seed=2345,
+                messages=[
+                    {"role": "system", "content": prompt3},
+                    {"role": "user", "content": example1},
+                    {"role": "assistant", "content": output1},
+                    {"role": "user", "content": example2},
+                    {"role": "assistant", "content": output2},
+                    {"role": "user", "content": example3}, 
+                    {"role": "assistant", "content": output3},
+                    {"role": "user", "content": example4},
+                    {"role": "assistant", "content": output4},
+                    {"role": "user", "content": example5},
+                    {"role": "assistant", "content": output5},
+                    {"role": "user", "content": example6},
+                    {"role": "assistant", "content": output6},
+                    {"role": "user", "content": example7},
+                    {"role": "assistant", "content": output7},
+                    {"role": "user", "content": example8},
+                    {"role": "assistant", "content": output8},
+                    {"role": "user", "content": example9},
+                    {"role": "assistant", "content": output9},
+                    {"role": "user", "content": row['abstract']}
+                ]
+            )
+        
+            # store data in df
+            data_dict_3['abstract'].append(row['abstract'])
+            data_dict_3['ID'].append(row['ID'])
+            data_dict_3['doi'].append(row['doi'])
+            message = response.choices[0].message.content
+            data_dict_3['GPT_response'].append(message)
+            try:
+                data_dict_3['GPT_class'].append(re.search(r'Class:\s*([A-Z])', message).group(1))
+            except (ValueError, AttributeError) as e:
+                data_dict_3['GPT_class'].append('')
+            data_dict_3['Input_tokens'].append(response.usage.prompt_tokens)
+            data_dict_3['Output_tokens'].append(response.usage.completion_tokens)
+            data_dict_3['reason_stop'].append(response.choices[0].finish_reason)
+            data_dict_3['system_fingerprint'].append(response.system_fingerprint)
+    
+        # create df out of dict
+        classed_wps_3 = pd.DataFrame(data_dict_3)
+        
+        # save progress, add url to processed url list
+        if (index + 1) % 10 == 0:
+            try:
+                if len(classed_wps_3) - len(pd.read_csv(f"{data_path}/classed_wps_3.csv")) == 10:
+                    new_papers_3 = classed_wps_3.tail(10)
+                    new_papers_3.to_csv(f"{data_path}/classed_wps_3.csv", index=False, mode='a', header=False)
+                    logging.info("Saved progress at iteration {}".format(index + 1))
+                else:
+                    logging.info("Warning: trying to overwrite with blank at iteration {}".format(index + 1))
+                    break
+            except FileNotFoundError:
+                classed_wps_3.to_csv(f"{data_path}/classed_wps_3.csv", index=False, header = True)
+        
+        # add to list of processed urls
+        processed_IDs_3.add(row['ID'])
+
+    # # sleep to observe rate limit (500 requests per minute)
+    # time.sleep(0.01)
+
+# Display the DataFrame
+classed_wps_3 = pd.DataFrame(data_dict_3)
+classed_wps_3.to_csv(f"{data_path}/classed_wps_3.csv", index=False)
+classed_wps_3
+
 # %%

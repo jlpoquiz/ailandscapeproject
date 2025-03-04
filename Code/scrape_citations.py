@@ -83,9 +83,12 @@ def is_english(text):
 
 # define the list of DOIs
 papers_nodois = papers[papers['doi'].isnull()].reset_index(drop=True)
-print(len(papers_nodois))
+print(papers_nodois)
+print(f"Originally: {len(papers_nodois)}")
 papers_nodois = papers_nodois[papers_nodois['abstract'].apply(is_english)]
-print(len(papers_nodois))
+print(f"After removing non-english: {len(papers_nodois)}")
+papers_nodois = papers_nodois.drop_duplicates('abstract')
+print(f"After removing duplicates: {len(papers_nodois)}")
 paper_rows = papers_nodois.iterrows()
 citation_counts = []
 processed_doi_list = []
@@ -128,11 +131,17 @@ for index, paper in tqdm(paper_rows, desc="Processing papers"):
     html = get_html_for_page(search_url)
     soup = BeautifulSoup(html, 'html.parser')
 
-    # if no abstract, try again
+    
     abstract = get_abstract_from_soup(soup)
+    # get citation count, if abstract found
+    if abstract:
+        citation_count = get_citation_count_from_soup(soup)
+        citation_counts.append(citation_count)
+        processed_abstract_list.append(abstract_search)
+    # if no abstract, try again
     if not abstract:
         attempts = 0
-        while attempts < 20 and not abstract:
+        while attempts < 15 and not abstract:
             print(f"DEBUG: No abstract found for abstract: {abstract_search}, retrying... (attempt {attempts+1})")
             html = get_html_for_page(search_url)
             soup = BeautifulSoup(html, 'html.parser')
@@ -146,7 +155,7 @@ for index, paper in tqdm(paper_rows, desc="Processing papers"):
         if abstract:
             citation_count = get_citation_count_from_soup(soup)
             citation_counts.append(citation_count)
-            processed_abstract_list.append(abstract)
+            processed_abstract_list.append(abstract_search)
 
 citations_df = pd.DataFrame({
     'abstract': processed_abstract_list,

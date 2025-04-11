@@ -16,14 +16,14 @@ if username =="lucyjhampton":
 if username == "lhampton":
     local_path = r"/Users/lhampton/Documents/Local_Projects/ailandscapeproject"
     os.chdir(local_path)
-    data_path = r"/Users/lhampton/Library/CloudStorage/GoogleDrive-lucyjhampton5@gmail.com/.shortcut-targets-by-id/1EznD-uaTblXtaIVx04-toZMQh7cQf9hA/AI Landscape Large Files/Data/constructed"
+    data_path = r"/Users/lhampton/Library/CloudStorage/GoogleDrive-lucyjhampton5@gmail.com/.shortcut-targets-by-id/1EznD-uaTblXtaIVx04-toZMQh7cQf9hA/AI Landscape Large Files/Data/original/working_papers"
 
 # %%
 
-NBER_no_duplicates = pd.read_csv(f'{local_path}/Data/NBER_no_duplicates.csv')
+NBER_no_duplicates = pd.read_csv(f'{data_path}/nber/NBER_no_duplicates.csv')
 NBER_no_duplicates['Source'] = "NBER"
 
-SSRN_no_duplicates = pd.read_csv(f'{local_path}/Data/SSRN_no_duplicates.csv')
+SSRN_no_duplicates = pd.read_csv(f'{data_path}/ssrn/SSRN_no_duplicates.csv')
 SSRN_no_duplicates['Source'] = "SSRN"
 
 working_papers = pd.concat([NBER_no_duplicates, SSRN_no_duplicates], ignore_index=True)
@@ -33,8 +33,8 @@ working_papers = working_papers.reset_index(level=None, drop=True)
 
 working_papers['ID'] = working_papers.index
 
-working_papers.to_csv(f'{local_path}/Data/working_papers.csv')
-working_papers
+# working_papers.to_csv(f'{local_path}/Data/working_papers.csv')
+# working_papers
 # %%
 
 example1 = """Large scale projects increasingly operate in complicated settings whilst drawing on an array of complex data-points, which require precise analysis for accurate control and interventions to mitigate possible project failure. Coupled with a growing tendency to rely on new information systems and processes in change projects, 90% of megaprojects globally fail to achieve their planned objectives. Renewed interest in the concept of Artificial Intelligence (AI) against a backdrop of disruptive technological innovations, seeks to enhance project managers‚Äô cognitive capacity through the project lifecycle and enhance project excellence. However, despite growing interest there remains limited empirical insights on project managers‚Äô ability to leverage AI for cognitive load enhancement in complex settings. As such this research adopts an exploratory sequential linear mixed methods approach to address unresolved empirical issues on transient adaptations of AI in complex projects, and the impact on cognitive load enhancement. Initial thematic findings from semi-structured interviews with domain experts, suggest that in order to leverage AI technologies and processes for sustainable cognitive load enhancement with complex data over time, project managers require improved knowledge and access to relevant technologies that mediate data processes in complex projects, but equally reflect application across different project phases. These initial findings support further hypothesis testing through a larger quantitative study incorporating structural equation modelling to examine the relationship between artificial intelligence and project managers‚Äô cognitive load with project data in complex contexts."""
